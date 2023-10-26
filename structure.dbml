@@ -84,7 +84,7 @@ Table users_advisor {
 Table users_headdepartment {
   id int(11) [pk, increment]
   user_id int(11) [not null]
-  major_id int(11)
+  major_id int(11) [default: null]
   // signature varchar(200) [not null]
   created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
   updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]

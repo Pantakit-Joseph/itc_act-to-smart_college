@@ -89,6 +89,53 @@ def usersSQL():
     append_file(sql, 'output/all.sql')
 
 
+def usersStudentSQL():
+    students = data.loadDataUsersStudent()
+    columns = ['id', 'user_id', 'student_code', 'created_at', 'updated_at', 'status']
+    rows = [[f'\'{i[0]}\'', f'\'{i[1]}\'', f'\'{i[4]}\'', "NOW()", "NOW()", '1'] for i in students]
+    sql = generateSQL('users_student', columns, rows)
+    write_file(sql, 'output/users_student.sql')
+    append_file(sql, 'output/all.sql')
+
+
+def usersAdvisorSQL():
+    advisors = data.loadDataUsersAdvisor()
+    columns = ['id', 'user_id', 'major_id', 'created_at', 'updated_at', 'status']
+    rows = [[f'\'{i[0]}\'', f'\'{i[1]}\'', f'\'{i[2]}\'', "NOW()", "NOW()", '1'] for i in advisors]
+    sql = generateSQL('users_advisor', columns, rows)
+    write_file(sql, 'output/users_advisor.sql')
+    append_file(sql, 'output/all.sql')
+
+
+def usersHeaddepartmentSQL():
+    advisors = data.loadDataUsersHeaddepartment()
+    columns = ['id', 'user_id', 'major_id', 'created_at', 'updated_at', 'status']
+    rows = [[f'\'{i[0]}\'', f'\'{i[1]}\'', f'\'{i[2]}\'', "NOW()", "NOW()", '1'] for i in advisors]
+    sql = generateSQL('users_headdepartment', columns, rows)
+    write_file(sql, 'output/users_headdepartment.sql')
+    append_file(sql, 'output/all.sql')
+
+
+def studentsGroupsSQL():
+    students_groups = data.loadDataStudentsGroups()
+    columns = ['id', 'student_id', 'group_id', 'semester_id', 'created_at', 'updated_at', 'status']
+    rows = [[f'\'{i[0]}\'', f'\'{i[2]}\'', f'\'{i[1]}\'', f'\'{i[4]}\'', "NOW()", "NOW()", '1'] for i in
+            students_groups]
+    sql = generateSQL('students_groups', columns, rows)
+    write_file(sql, 'output/students_groups.sql')
+    append_file(sql, 'output/all.sql')
+
+
+def advisorsGroupsSQL():
+    advisors_groups = data.loadDataAdvisorsGroups()
+    columns = ['id', 'advisor_id', 'group_id', 'advisor_type', 'semester_id', 'created_at', 'updated_at', 'status']
+    rows = [[f'\'{i[0]}\'', f'\'{i[1]}\'', f'\'{i[2]}\'', f'\'{i[6]}\'', '2', "NOW()", "NOW()", '1'] for i in
+            advisors_groups]
+    sql = generateSQL('advisors_groups', columns, rows)
+    write_file(sql, 'output/advisors_groups.sql')
+    append_file(sql, 'output/all.sql')
+
+
 def write_file(content, filename):
     f = open(filename, "w", encoding='UTF8')
     f.write(content + '\n')
@@ -105,5 +152,5 @@ def append_file(content, filename):
         f = open(filename, "w", encoding='UTF8')
     else:
         f = open(filename, "a", encoding='UTF8')
-    f.write(content + '\n')
+    f.write(content + '\n\n')
     f.close()

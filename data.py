@@ -198,3 +198,31 @@ def loadDataSemester():
         semester = [row for row in csv.reader(f)]
         del semester[0]
     return semester
+
+
+def loadDataUsersAdvisor():
+    with open('data/users_advisor.csv', 'r', encoding='UTF8') as f:
+        users = [row for row in csv.reader(f)]
+        del users[0]
+    return users
+
+
+def loadDataUsersHeaddepartment():
+    with open('data/users_headdepartment.csv', 'r', encoding='UTF8') as f:
+        users = [row for row in csv.reader(f)]
+        del users[0]
+    return users
+
+
+def loadDataStudentsGroups():
+    with open('data/students_groups.csv', 'r', encoding='UTF8') as f:
+        students = [row for row in csv.reader(f)]
+        del students[0]
+    return students
+
+
+def loadDataAdvisorsGroups():
+    with open('data/advisors_groups.csv', 'r', encoding='UTF8') as f:
+        advisors = [row for row in csv.reader(f)]
+        del advisors[0]
+    return advisors
