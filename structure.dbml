@@ -1,0 +1,229 @@
+Project smart_college {
+  database_type: 'MySQL'
+  Note: '''
+# Smart College 2023
+
+## Assets
+ - [smart-college-structure.sql](#)
+ - [smart-college-mockup-data.sql](#)
+ - [smart-college-structure-and-mockup-data.sql](#)
+
+  '''
+}
+
+enum status_type {
+  1 [note: 'เผยแพร่, Active']
+  0 [note: 'ไม่เผยแพร่, not active']
+  "-1" [note: 'ถังขยะ']
+}
+
+enum user_type {
+  admin [note: 'ผู้ดูแลระบบ']
+  advisor [note: 'อาจารย์ที่ปรึกษา']
+  executive [note: 'ฝ่ายบริหาร']
+  // headadvisor [note: 'หัวหน้างานครูที่ปรึกษา']
+  headdepartment [note: 'หัวหน้าแผนกฯ']
+  staff [note: 'เจ้าหน้าที่']
+  student [note: 'นักศึกษา']
+}
+
+// Table status {
+//   id int [pk, increment]
+//   code varchar(20) [not null]
+// }
+
+Table users {
+  id int(11) [pk, increment]
+  username varchar(50) [unique]
+  email varchar(100) [unique]
+  password varchar(255) [not null]
+  firstname varchar(50) [not null, note: 'ชื่อ']
+  lastname varchar(50) [not null, note: 'นามสกุล']
+  user_type user_type [not null, default: 'student']
+  profile varchar(255) [not null, default: '/storage/profiles/default.jpg']
+  signature varchar(255)
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  status status_type [not null, default: "1", note: 'สถานะ']
+
+  Note: 'ข้อมูลผู้ใช้ระบบ'
+}
+
+Table users_advisor {
+  id int(11) [pk, increment]
+  user_id int(11) [not null]
+  major_id int(11)
+  // signature varchar(200) [not null]
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  status status_type [not null, default: "1", note: 'สถานะ']
+
+  Note: 'ข้อมูลครูที่ปรึกษา'
+}
+
+// Table users_executive {
+//   id int(11) [pk, increment]
+//   user_id int(11) [not null]
+//   signature varchar(200) [not null]
+//   created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+//   updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+//   status status_type [not null, default: "1", note: 'สถานะ']
+
+//   Note: 'ข้อมูลผู้บริหาร'
+// }
+
+// Table users_headadvisor {
+//   id int(11) [pk, increment]
+//   user_id int(11) [not null]
+//   // signature varchar(200) [not null]
+//   created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+//   updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+//   status status_type [not null, default: "1", note: 'สถานะ']
+// }
+
+Table users_headdepartment {
+  id int(11) [pk, increment]
+  user_id int(11) [not null]
+  major_id int(11)
+  // signature varchar(200) [not null]
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  status status_type [not null, default: "1", note: 'สถานะ']
+}
+
+// Table users_staff {
+//   id int(11) [pk, increment]
+//   user_id int(11) [not null]
+//   created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+//   updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+// }
+
+Table users_student {
+  id int(11) [pk, increment]
+  user_id int(11) [not null, note: 'ชื่อผู้ใช้เข้าระบบ']
+  student_code varchar(50) [note: 'รหัสนักเรียน']
+  // group_id int(11) [not null, note: 'รหัสกลุ่มการเรียน']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  status status_type [not null, default: "1", note: 'สถานะ']
+}
+
+// Table signature {
+//   id int [pk, increment]
+//   user_id int(11) [not null]
+//   signature_img varchar(255)
+// }
+
+Table groups {
+  id int(11) [pk, increment, note: 'รหัสอ้างอิง']
+  group_code int(11) [not null, note: 'รหัสกลุ่ม']
+  group_name varchar(100) [not null]
+  degreelevel_id int(11)
+  minor_id int(11) [not null, note: 'สาขางาน']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'บันทึกข้อมูลเมื่อไหร่']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'แก้ไขข้อมูลล่าสุดเมื่อไหร่']
+  status status_type [not null, default: "1", note: 'สถานะ']
+
+  Note: 'ข้อมูลกลุ่มเรียน'
+}
+
+Table minors {
+  id int(11) [pk, increment, note: 'รหัสอ้างอิง']
+  minor_code varchar(10) [not null, note: 'รหัสสาขางาน']
+  minor_name varchar(100) [not null, note: 'ชื่อสาขางาน']
+  minor_eng varchar(100) [not null, note: 'ชื่อสาขางานภาษาอังกฤษ']
+  major_id int(11) [not null, note: 'รหัสสาขาวิชา']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'บันทึกข้อมูลเมื่อไหร่']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'แก้ไขข้อมูลล่าสุดเมื่อไหร่']
+  status status_type [not null, default: "1", note: 'สถานะ']
+
+  Note: 'ข้อมูลกลุ่มเรียน'
+}
+
+Table majors {
+  id int(11) [pk, increment, note: 'รหัสอ้างอิง']
+  major_code varchar(10) [not null, note: 'รหัสสาขาวิชา']
+  major_name varchar(100) [not null, note: 'ชื่อสาขาวิชา']
+  major_eng varchar(100) [not null, note: 'ชื่อสาขาวิชาภาษาอังกฤษ']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'บันทึกข้อมูลเมื่อไหร่']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'แก้ไขข้อมูลล่าสุดเมื่อไหร่']
+  status status_type [not null, default: "1", note: 'สถานะ']
+}
+
+Table students_groups {
+  id int(11) [pk, increment, note: 'รหัสอ้างอิง']
+  student_id int(11) [not null, note: 'user_id นักศึกษา']
+  group_id int(11) [not null, note: 'รหัสกลุ่มการเรียน']
+  semester_id int(11)  [not null, note: 'รหัสภาคเรียน']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'บันทึกข้อมูลเมื่อไหร่']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'แก้ไขข้อมูลล่าสุดเมื่อไหร่']
+  status status_type [not null, default: "1", note: 'สถานะ']
+}
+
+enum advisor_type {
+  advisor [note: 'ครูที่ปรึกษาหลัก']
+  coadvisor [note: 'ครูที่ปรึกษาร่วม']
+}
+
+Table advisors_groups {
+  id int(11) [pk, increment, note: 'รหัสอ้างอิง']
+  advisor_id int(11) [not null, note: 'user_id ครูที่ปรึกษา']
+  group_id int(11) [not null, note: 'รหัสกลุ่มการเรียน']
+  advisor_type varchar(10) [not null, note: 'ประเภทที่ปรึกษา']
+  semester_id int(11)  [not null, note: 'รหัสภาคเรียน']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'บันทึกข้อมูลเมื่อไหร่']
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`, note: 'แก้ไขข้อมูลล่าสุดเมื่อไหร่']
+  status status_type [not null, default: "1", note: 'สถานะ']
+}
+
+Table semester {
+  id int(11) [pk, increment]
+  semester_no int(1) [not null]
+  semester_year varchar(4) [not null, note: 'ปีการสึกษา']
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  status status_type [not null, default: "0", note: 'สถานะ']
+
+  Note: 'ข้อมูลภาคเรียน'
+}
+
+Table degreelevel {
+  id int(11) [pk, increment, note: 'รหัสระดับการศึกษา Running']
+  degreelevel_code varchar(2) [note: 'รหัสระดับการศึกษ']
+  degreelevel_name varchar(50) [note: 'ชื่อระดับการศึกษา']
+  degreelevel_abbrev varchar(5) [note: 'คำย่อระดับการศึกษา']
+
+  Note: 'ข้อมูลระดับการศึกษา'
+}
+
+Ref: "users"."id" - "users_student"."user_id" [delete: cascade, update: cascade]
+
+Ref: "users"."id" - "users_advisor"."user_id"[delete: cascade, update: cascade]
+
+// Ref: "users"."id" - "users_executive"."user_id" [delete: cascade, update: cascade]
+
+// Ref: "users"."id" - "users_headadvisor"."user_id" [delete: cascade, update: cascade]
+
+Ref: "users"."id" - "users_headdepartment"."user_id" [delete: cascade, update: cascade]
+
+Ref: "majors"."id" < "users_advisor"."major_id" [delete: no action, update: cascade]
+
+Ref: "majors"."id" < "users_headdepartment"."major_id" [delete: no action, update: cascade]
+
+Ref: "degreelevel"."id" < "groups"."degreelevel_id" [delete: set null, update: cascade]
+
+Ref: "minors"."id" < "groups"."minor_id" [delete: cascade, update: cascade]
+
+Ref: "majors"."id" < "minors"."major_id" [delete: cascade, update: cascade]
+
+Ref: "users"."id" < "advisors_groups"."advisor_id" [delete: cascade, update: cascade]
+
+Ref: "groups"."id" < "advisors_groups"."group_id" [delete: cascade, update: cascade]
+
+Ref: "users"."id" < "students_groups"."student_id" [delete: cascade, update: cascade]
+
+Ref: "groups"."id" < "students_groups"."group_id" [delete: cascade, update: cascade]
+
+Ref: "semester"."id" < "advisors_groups"."semester_id" [delete: no action, update: cascade]
+
+Ref: "semester"."id" < "students_groups"."semester_id" [delete: no action, update: cascade]
